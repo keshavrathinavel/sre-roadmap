@@ -4,12 +4,12 @@ An onboarding primer for new SREs who have already joined the role and are rampi
 the production systems they'll own: Kubernetes, cloud infrastructure, observability, and the data
 platforms sitting alongside them.
 
-See [`CLAUDE.md`](CLAUDE.md) for the full 12-month onboarding plan, phase-by-phase breakdown, and
-resource list.
+See [`CLAUDE.md`](CLAUDE.md) for the full onboarding plan, phase-by-phase breakdown, and resource
+list.
 
 ## Repo structure
 
-- `roadmap/CHECKLIST.md` / `roadmap/checklist.html` — flat, checkable version of every topic,
+- `CHECKLIST.md` / `checklist.html` — flat, checkable version of every topic,
   organized by domain rather than by phase
 - `roadmap/topics/` — deep-dive reference docs (Kubernetes internals, Linux & networking,
   AWS/EKS, system design/observability, data-platform streaming, scripting patterns)

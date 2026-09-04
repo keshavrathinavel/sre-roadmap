@@ -5,7 +5,7 @@
 > drills — use this file as the flat, scannable version; the topic files are where the mechanism
 > behind each line actually lives.
 >
-> An interactive, checkbox-persisting version of this list lives in `roadmap/checklist.html`.
+> An interactive, checkbox-persisting version of this list lives in `checklist.html`.
 
 > **Cross-cutting habits — apply these to every answer, not just the item you're currently on:**
 > - **RCA precision** — don't conflate adjacent layers ("app unreachable" vs "service unreachable"). State the precise causal chain.

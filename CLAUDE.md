@@ -1,5 +1,5 @@
 # SRE Onboarding Primer
-## A 12-Month Curriculum for New SREs Ramping Up on Production Systems
+## A Curriculum for New SREs Ramping Up on Production Systems
 
 ---
 
@@ -12,22 +12,28 @@ genuinely effective at running and troubleshooting the kinds of systems an SRE o
 cloud infrastructure, observability stacks, and the data platforms increasingly sitting alongside
 them.
 
-If you already have a couple of years of hands-on Kubernetes/cloud experience, you can move
-through Phase 1 faster. If this is your first real production role, take the full 12 months —
-there's no rush, and the failure labs are worth running slowly enough to actually understand what
-broke and why, not just to get to the next topic.
+There's no fixed timeline here — go at whatever pace actually gets the material to stick. If you
+already have a couple of years of hands-on Kubernetes/cloud experience, move through Phase 1
+faster. If this is your first real production role, don't rush it — the failure labs are worth
+running slowly enough to actually understand what broke and why, not just to get to the next topic.
+
+**If you're not sure where to start: start with the failure labs.** Breaking something on purpose
+and fixing it teaches faster than reading topic docs in sequence. The phases below are organized by
+topic for reference and depth, not as a mandate to read front-to-back before touching a cluster —
+dip into `roadmap/failure-labs/` early and often, and pull in the topic docs when a failure exposes
+a gap in your understanding.
 
 ---
 
 ## How to use this repo
 
-- `roadmap/CHECKLIST.md` / `roadmap/checklist.html` — a flat, checkable version of every topic
+- `roadmap/failure-labs/` — hands-on break-it-yourself curricula (Kubernetes, data platforms) with
+  manifests and assets — **start here.** This is where the learning actually compounds
+- `CHECKLIST.md` / `checklist.html` — a flat, checkable version of every topic
   below, organized by domain rather than by phase, so you always know what's left regardless of
   where you are in the curriculum
 - `roadmap/topics/` — deep-dive reference docs (Kubernetes internals, Linux & networking, AWS/EKS,
   system design/observability, data-platform streaming, scripting patterns)
-- `roadmap/failure-labs/` — hands-on break-it-yourself curricula (Kubernetes, data platforms) with
-  manifests and assets — this is where the learning actually compounds
 - `roadmap/system-design/` — the HLD/LLD framework plus worked LLD and distributed-systems problems
 - `roadmap/scripting-practice/` — worked Python exercises (log parsing, rate limiter, LRU/TTL
   cache, top-K stream) — the coding patterns that come up in real automation and tooling work
@@ -59,11 +65,11 @@ lives in **Resources** near the end of this doc.
 
 ---
 
-## Always-On (Parallel Track — All 12 Months)
+## Always-On (Parallel Track)
 
-These run alongside every phase, every week:
+These run alongside every phase:
 
-- **Coding practice, 1–2 problems/day** — focus on the patterns that actually show up in
+- **Coding practice, done consistently** — focus on the patterns that actually show up in
   production tooling (heap, BFS/DFS, sliding window, two pointers) rather than grinding breadth
   for its own sake. `roadmap/topics/scripting-patterns.md` and `roadmap/scripting-practice/` are
   the SRE-flavored version of this: rate limiters, caches, log parsers, retry logic.
@@ -74,11 +80,11 @@ These run alongside every phase, every week:
   postmortems later
 - **Google SRE Book** — read chapter-selectively as you hit each phase (not cover to cover)
 - **syedali.net** — ongoing reference for testing your Linux and systems understanding
-- **The checklist** — `roadmap/CHECKLIST.md` (and its interactive version, `roadmap/checklist.html`)
+- **The checklist** — `CHECKLIST.md` (and its interactive version, `checklist.html`)
 
 ---
 
-## Phase 1 — Months 1–3: Systems Foundations
+## Phase 1: Systems Foundations
 
 ### Linux Internals
 The deepest, most foundational area for an SRE. A single command (e.g. `ping`) can unpack into an
@@ -123,7 +129,7 @@ and legible to teammates during a real incident, not just correct.
 
 ---
 
-## Phase 2 — Months 4–6: Security + K8s Mastery
+## Phase 2: Security + K8s Mastery
 
 ### Cloud Security
 - Zero trust architecture
@@ -132,10 +138,11 @@ and legible to teammates during a real incident, not just correct.
 - IAM least-privilege patterns
 - Network segmentation
 - GDPR-compliant PII handling
-- Infrastructure as Code — Pulumi (`roadmap/CHECKLIST.md` § Infrastructure as Code): stacks, component resources, policy as code, and the imperative-language-vs-declarative-DSL tradeoff
+- Infrastructure as Code — Pulumi (`CHECKLIST.md` § Infrastructure as Code): stacks, component resources, policy as code, and the imperative-language-vs-declarative-DSL tradeoff
 
 ### K8s Failure Curriculum
-Work through all 5 categories from `roadmap/failure-labs/kubernetes.md`. One category per week = 5 weeks of high-quality learning.
+Work through all 5 categories from `roadmap/failure-labs/kubernetes.md`, one at a time, at
+whatever pace lets each one actually sink in.
 
 **Category 1 — Resource Exhaustion**
 - OOMKilled pods: distinguish from CrashLoopBackOff
@@ -191,7 +198,7 @@ Work through all 5 categories from `roadmap/failure-labs/kubernetes.md`. One cat
 
 ---
 
-## Phase 3 — Months 7–9: Observability + Reliability
+## Phase 3: Observability + Reliability
 
 ### Observability
 - SLOs and error budgets — deep understanding, not surface knowledge
@@ -265,7 +272,7 @@ decision out loud to a new teammate.
 
 ---
 
-## Phase 4 — Months 10–12: Putting It Into Practice
+## Phase 4: Putting It Into Practice
 
 By this point the goal shifts from *learning the material* to *applying it on real systems* —
 shadowing on-call, taking part in postmortems, and running full troubleshooting sessions on
@@ -359,22 +366,9 @@ sections above point back into this list rather than repeating full links.
 
 ---
 
-## Time Budget (3–4 hours/day)
-
-| Activity | Time | Frequency |
-|----------|------|-----------|
-| Primary phase topic (deep study) | 1.5–2 hrs | Daily |
-| Coding practice | 30–45 min | Daily |
-| K8s lab / hands-on | 45–60 min | 4x/week |
-| Go practice | 30 min | 3x/week |
-| Lab writeup / RCA practice | 30 min | 1x/week |
-| Troubleshooting/design practice with a mentor (Phase 4) | Full session | 2–3x/week |
-
----
-
 ## Repo structure
 
-- `roadmap/CHECKLIST.md` / `roadmap/checklist.html` — the flat, checkable version of every topic below, organized by domain rather than by phase or date
+- `CHECKLIST.md` / `checklist.html` — the flat, checkable version of every topic below, organized by domain rather than by phase or date
 - `roadmap/topics/` — deep-dive reference docs (Kubernetes internals, Linux & networking, AWS/EKS, system-design/observability, data-platform streaming, scripting patterns)
 - `roadmap/failure-labs/` — hands-on break-it-yourself curricula (Kubernetes, data platforms) with manifests and assets
 - `roadmap/system-design/` — the HLD/LLD framework plus worked LLD and distributed-systems problems

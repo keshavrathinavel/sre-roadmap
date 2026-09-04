@@ -449,7 +449,7 @@
 
 <script>
 const topics = [
-  { id: "kubernetes", label: "Kubernetes", ref: "topics/kubernetes-internals.md", items: [
+  { id: "kubernetes", label: "Kubernetes", ref: "roadmap/topics/kubernetes-internals.md", items: [
     "Pod lifecycle: Pending → Running → Succeeded/Failed/Unknown",
     "Difference between Deployment, StatefulSet, DaemonSet, ReplicaSet — when to use each",
     "Namespaces — the multi-tenancy/organizational boundary for names, RBAC, quotas, and NetworkPolicy scope (distinct from Linux namespaces, which isolate kernel resources)",
@@ -468,13 +468,13 @@ const topics = [
     "PVC/PV binding, StorageClass, access modes (RWO, RWX, ROX)",
     "kubectl commands cold: `get`, `describe`, `logs`, `exec`, `apply`, `rollout status`, `get events`, `top`",
   ]},
-  { id: "virtualization", label: "VMs vs Containers vs K8s", ref: "topics/kubernetes-internals.md", items: [
+  { id: "virtualization", label: "VMs vs Containers vs K8s", ref: "roadmap/topics/kubernetes-internals.md", items: [
     "Virtual machines: hypervisor types — Type 1/bare-metal (KVM, ESXi) vs Type 2/hosted (VirtualBox, VMware Workstation); each VM gets its own full OS and kernel",
     "Containers vs VMs: containers share the host kernel (namespaces + cgroups), so they start in milliseconds but isolate less than a VM",
     "Docker Compose — declarative multi-container setups on a single host; the one-host precursor to what Kubernetes coordinates across many",
     "When to reach for which: a VM for full OS/kernel isolation or a different OS entirely; a container for fast, portable packaging on a shared kernel; Kubernetes when you need orchestration across many containers and hosts — not just \"because containers\"",
   ]},
-  { id: "linux", label: "Linux, OS & Networking", ref: "topics/linux-and-networking.md", items: [
+  { id: "linux", label: "Linux, OS & Networking", ref: "roadmap/topics/linux-and-networking.md", items: [
     "Basic navigation and file discovery: `ls`/`ls -la`, `cd`, `find` — the fundamentals underneath the internals below",
     "File descriptors: 0/1/2 (stdin/stdout/stderr), how `open()` creates an fd, fd table per process",
     "Inodes: what they store (metadata, not filename), hard links vs soft links, `stat` output",
@@ -509,7 +509,7 @@ const topics = [
     "connection refused (RST) vs timeout (drop) vs reset (mid-stream RST) — name the signal for each",
     "Tools: `ss -tanp`, `dig`, `nslookup`, `curl -v`, `ping`, `tcpdump`, `traceroute`, `nc -zv` — what each reveals",
   ]},
-  { id: "scripting", label: "Python Scripting", ref: "topics/scripting-patterns.md", items: [
+  { id: "scripting", label: "Python Scripting", ref: "roadmap/topics/scripting-patterns.md", items: [
     "Parse a log file, extract patterns, count frequencies — `re`, file I/O, `collections.Counter`",
     "Write a function that processes a list/dict and returns transformed output",
     "String compression/manipulation",
@@ -527,7 +527,7 @@ const topics = [
     "Difference between CMD and ENTRYPOINT — classic trap",
     "Shell form vs exec form — why shell form breaks signal delivery to your app (PID 1 is the shell, not your process)",
   ]},
-  { id: "aws", label: "AWS", ref: "topics/aws-cloud.md", items: [
+  { id: "aws", label: "AWS", ref: "roadmap/topics/aws-cloud.md", items: [
     "IAM: roles vs users vs policies, least privilege, instance profiles, OIDC federation",
     "VPC: subnets (public vs private), route tables, security groups vs NACLs, NAT gateway",
     "EKS: how node groups work, how pods get IAM permissions (IRSA), VPC CNI IP density limits",
@@ -549,7 +549,7 @@ const topics = [
     "Config and secrets — per-stack config values, encrypted secrets via a provider (passphrase or cloud KMS)",
     "The core tradeoff vs a declarative DSL: a real programming language gives loops, conditionals, functions, tests, and an existing package ecosystem — more expressive, but easier to accidentally introduce non-idempotent or side-effect-laden code",
   ]},
-  { id: "observability", label: "System Design & Observability", ref: "topics/system-design-observability.md", items: [
+  { id: "observability", label: "System Design & Observability", ref: "roadmap/topics/system-design-observability.md", items: [
     "Three pillars: metrics, logs, traces — what each answers, and why they have different cost/retention profiles",
     "The cardinality trap in metric labels",
     "Pull (Prometheus) vs push (logs/traces) — and why each pillar uses the model it does",
@@ -558,7 +558,7 @@ const topics = [
     "Burn-rate alerting — the mechanism for spending an error budget deliberately: page on fast burn, ticket on slow burn",
     "Monitoring the monitoring — dead-man's-switch, not sharing fate with what it observes",
   ]},
-  { id: "data-platform", label: "Data Platforms", ref: "topics/data-platform-streaming.md", items: [
+  { id: "data-platform", label: "Data Platforms", ref: "roadmap/topics/data-platform-streaming.md", items: [
     "Kafka core concepts: topics, partitions (ordering is per-partition only, never cross-partition), offsets, brokers/leaders",
     "Kafka producers: `acks` (0/1/all), retries, batching (`batch.size`/`linger.ms`), idempotence (producer ID + sequence number dedup)",
     "Kafka consumers: consumer groups, partition assignment (partition count = hard ceiling on group parallelism), rebalancing and why it pauses the whole group",
@@ -576,7 +576,7 @@ const topics = [
     "The lake vs the serving tier as two different sinks with two different reliability profiles; the small-files problem",
     "Golden signals for a streaming pipeline: consumer lag, end-to-end latency, throughput, checkpoint duration, error rate, freshness/completeness",
   ]},
-  { id: "k8s-labs", label: "Failure Labs: Kubernetes", ref: "failure-labs/kubernetes.md", items: [
+  { id: "k8s-labs", label: "Failure Labs: Kubernetes", ref: "roadmap/failure-labs/kubernetes.md", items: [
     "OOMKilled pods vs CrashLoopBackOff — tell them apart, then tell genuine CPU saturation apart from CPU *throttling* (same symptom, opposite fix)",
     "Node pressure: fill disk via `hostPath`, watch the kubelet evict pods in QoS order (BestEffort → Burstable → Guaranteed)",
     "CoreDNS deletion: service-to-service failures that look like app errors, not DNS errors",
@@ -591,7 +591,7 @@ const topics = [
     "PVC stuck in Pending: nonexistent StorageClass vs `WaitForFirstConsumer` binding mode",
     "Pod stuck in Terminating: `preStop` hook + `terminationGracePeriodSeconds`",
   ]},
-  { id: "data-labs", label: "Failure Labs: Data Platforms", ref: "failure-labs/data-platform.md", items: [
+  { id: "data-labs", label: "Failure Labs: Data Platforms", ref: "roadmap/failure-labs/data-platform.md", items: [
     "Flink: backpressure — trace it upstream from the busy operator in the Flink UI",
     "Flink: JobManager as a single point of failure with no HA configured",
     "Flink: checkpoint failure and timeout under backpressure or large state",
