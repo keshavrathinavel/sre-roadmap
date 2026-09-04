@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: polinux-mem-stress
+spec:
+  containers:
+  - name: polinux-mem-stress-container
+    image: polinux/stress:1.0.4
+    resources:
+      limits:
+        memory: "100Mi"
+    command: ["stress"]
+    args: ["--vm", "5", "--vm-bytes", "50M", "--vm-hang", "5"]

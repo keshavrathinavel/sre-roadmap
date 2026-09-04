@@ -1,0 +1,52 @@
+# Three pods, one per QoS class. They do nothing but sleep.
+# The point is to watch the KUBELET decide who dies first when the node disk fills.
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: besteffort-pod
+  labels: { lab: disk-pressure, qos: besteffort }
+spec:
+  terminationGracePeriodSeconds: 0
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: ["sleep", "infinity"]
+    # No requests, no limits -> QoS class: BestEffort
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: burstable-pod
+  labels: { lab: disk-pressure, qos: burstable }
+spec:
+  terminationGracePeriodSeconds: 0
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: ["sleep", "infinity"]
+    resources:
+      requests:               # requests < limits (mem) -> QoS class: Burstable
+        cpu: "10m"
+        memory: "16Mi"
+      limits:
+        memory: "64Mi"
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: guaranteed-pod
+  labels: { lab: disk-pressure, qos: guaranteed }
+spec:
+  terminationGracePeriodSeconds: 0
+  containers:
+  - name: app
+    image: busybox:1.36
+    command: ["sleep", "infinity"]
+    resources:
+      requests:               # requests == limits for BOTH cpu+mem -> QoS class: Guaranteed
+        cpu: "50m"
+        memory: "64Mi"
+      limits:
+        cpu: "50m"
+        memory: "64Mi"

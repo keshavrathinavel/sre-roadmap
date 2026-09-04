@@ -1,0 +1,19 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: disk-pressure
+nodes:
+- role: control-plane
+  kubeadmConfigPatches:
+  - |
+    kind: KubeletConfiguration
+    # Evict (hard, no grace) when free disk on nodefs drops below 70%.
+    # nodefs == imagefs in kind (one filesystem), so this is the disk-pressure trigger.
+    evictionHard:
+      nodefs.available: "70%"
+      imagefs.available: "70%"
+      nodefs.inodesFree: "5%"
+    # Default is 5m — too slow for a lab. Lets DiskPressure clear ~30s after we free space.
+    evictionPressureTransitionPeriod: "30s"
+    evictionMinimumReclaim:
+      nodefs.available: "500Mi"
+      imagefs.available: "500Mi"

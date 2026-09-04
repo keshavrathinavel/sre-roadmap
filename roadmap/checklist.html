@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SRE Roadmap Checklist</title>
+<style>
+  :root {
+    --bg: #FAFAF9;
+    --surface: #FFFFFF;
+    --surface-alt: #F4F4F5;
+    --border: #E7E5E4;
+    --border-strong: #D6D3D1;
+    --text: #18181B;
+    --text-secondary: #52525B;
+    --text-tertiary: #A1A1AA;
+    --accent: #2563EB;
+    --accent-bg: #EFF6FF;
+    --flag: #B45309;
+    --flag-bg: #FEF3C7;
+    --undone: #B91C1C;
+    --undone-bg: #FEE2E2;
+    --warn: #92400E;
+    --warn-bg: #FEFCE8;
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0B0B0C;
+      --surface: #161618;
+      --surface-alt: #1F1F22;
+      --border: #2A2A2E;
+      --border-strong: #3A3A3F;
+      --text: #FAFAFA;
+      --text-secondary: #A1A1AA;
+      --text-tertiary: #71717A;
+      --accent: #60A5FA;
+      --accent-bg: rgba(96, 165, 250, 0.12);
+      --flag: #FCD34D;
+      --flag-bg: rgba(252, 211, 77, 0.12);
+      --undone: #FCA5A5;
+      --undone-bg: rgba(252, 165, 165, 0.12);
+      --warn: #FCD34D;
+      --warn-bg: rgba(252, 211, 77, 0.08);
+    }
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Inter", "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button { font-family: inherit; }
+  code {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.92em;
+    background: var(--surface-alt);
+    padding: 1px 5px;
+    border-radius: 4px;
+  }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 2.25rem 1.75rem 4rem;
+  }
+
+  .layout-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 28px;
+    align-items: start;
+  }
+  .layout-grid.no-sidebar {
+    grid-template-columns: 1fr;
+  }
+  .main-col { min-width: 0; }
+  .sidebar {
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+  @media (max-width: 1000px) {
+    .layout-grid { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+
+  .tab-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .tab {
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: background .12s, color .12s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active {
+    background: var(--surface);
+    color: var(--text);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 0 0 0.5px var(--border);
+  }
+  .tab .count {
+    font-size: 12px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .tab.flagged .count { background: var(--flag-bg); color: var(--flag); }
+  .tab.backlog .count { background: var(--undone-bg); color: var(--undone); }
+
+  .prog {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 8px;
+  }
+  .prog-seg {
+    height: 3px;
+    border-radius: 2px;
+    flex: 1;
+    background: var(--border);
+  }
+  .prog-seg.done { background: var(--accent); }
+  .prog-seg.active { background: var(--accent); opacity: 0.45; }
+  .prog-meta {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-bottom: 1.5rem;
+  }
+
+  .topic-header { margin-bottom: 1.25rem; }
+  .topic-title {
+    font-size: 21px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  .topic-sub {
+    font-size: 14.5px;
+    color: var(--text-secondary);
+    margin-top: 6px;
+  }
+  .topic-sub a { color: var(--accent); text-decoration: none; }
+  .topic-sub a:hover { text-decoration: underline; }
+
+  .item-list { display: flex; flex-direction: column; gap: 2px; }
+  .item-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+  }
+  .item-row:hover { background: var(--surface-alt); }
+  .item-label {
+    flex: 1;
+    font-size: 14.5px;
+    line-height: 1.5;
+    padding-top: 1px;
+    color: var(--text);
+  }
+  .item-row.is-checked .item-label { text-decoration: line-through; opacity: 0.5; }
+  .item-row.is-flagged { box-shadow: inset 0 0 0 1px var(--flag); background: var(--flag-bg); }
+
+  .item-marks {
+    display: inline-flex;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .mark-btn {
+    width: 26px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    color: var(--text-tertiary);
+    transition: background .12s, color .12s;
+  }
+  .mark-btn:hover { background: var(--surface-alt); color: var(--text); }
+  .mark-btn.check-btn.active { color: #FFFFFF; background: var(--accent); }
+  .mark-btn.flag-btn.active { color: var(--flag); background: var(--flag-bg); }
+
+  .backlog-group { margin-bottom: 1.5rem; }
+  .backlog-group-title {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .backlog-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: var(--surface);
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  .backlog-item .b-icons { display: inline-flex; gap: 6px; flex-shrink: 0; }
+  .backlog-item .b-label { flex: 1; color: var(--text); }
+  .backlog-item .b-actions { display: inline-flex; gap: 4px; }
+  .backlog-item .b-actions button {
+    padding: 4px 11px;
+    font-size: 12.5px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .backlog-item .b-actions button:hover {
+    background: var(--surface-alt);
+    color: var(--text);
+  }
+  .backlog-empty {
+    font-size: 14.5px;
+    color: var(--text-tertiary);
+    padding: 2rem 1rem;
+    text-align: center;
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-md);
+  }
+
+  .footer {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 1rem;
+  }
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+  }
+  .legend-icon {
+    width: 15px;
+    height: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--text-tertiary);
+  }
+  .toolbar .saved-info { flex: 1; }
+  .toolbar .saved-info.stale {
+    color: var(--flag);
+    font-weight: 500;
+  }
+  .toolbar button {
+    padding: 5px 12px;
+    font-size: 12.5px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    font-weight: 500;
+  }
+  .toolbar button:hover { background: var(--surface-alt); }
+
+  .sidebar-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .sidebar-section.flagged { border-left: 3px solid var(--flag); }
+  .sidebar-section.backlog { border-left: 3px solid var(--undone); }
+  .sidebar-title {
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sidebar-title .badge {
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .sidebar-section.flagged .badge { background: var(--flag-bg); color: var(--flag); }
+  .sidebar-section.backlog .badge { background: var(--undone-bg); color: var(--undone); }
+  .sidebar-section .icon { color: var(--flag); display: inline-flex; }
+  .sidebar-section.backlog .icon { color: var(--undone); }
+  .sidebar-empty {
+    font-size: 13px;
+    color: var(--text-tertiary);
+  }
+  .sidebar-item {
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .sidebar-item:first-of-type { border-top: none; padding-top: 0; }
+  .sidebar-item:last-of-type { padding-bottom: 0; }
+  .sidebar-item:hover .sidebar-item-label { color: var(--accent); }
+  .sidebar-item-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .sidebar-item-meta {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+  .sidebar-item-label {
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.45;
+    transition: color .12s;
+  }
+  .sidebar-clear {
+    font-size: 11px;
+    padding: 2px 9px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .sidebar-clear:hover {
+    background: var(--surface-alt);
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <nav class="tab-bar" id="topicTabs"></nav>
+
+  <div class="layout-grid" id="layoutGrid">
+  <div class="main-col">
+  <main id="topicView">
+    <div class="prog" id="progBar"></div>
+    <div class="prog-meta" id="totalBar"></div>
+
+    <div class="topic-header">
+      <div class="topic-title" id="topicTitle"></div>
+      <div class="topic-sub" id="topicSub"></div>
+    </div>
+
+    <div class="item-list" id="itemList"></div>
+  </main>
+
+  <main id="flaggedView" style="display:none">
+    <div class="topic-header">
+      <div class="topic-title">Flagged for revision</div>
+      <div class="topic-sub">Topics you flagged as shaky. Click "Open topic" to jump back, or "Revised" once you've reviewed it.</div>
+    </div>
+    <div id="flaggedList"></div>
+  </main>
+
+  <main id="backlogView" style="display:none">
+    <div class="topic-header">
+      <div class="topic-title">Still to do</div>
+      <div class="topic-sub">Every item across every topic you haven't checked off yet. Click "Open topic" to jump back, or "Mark done" once you've got it cold.</div>
+    </div>
+    <div id="backlogList"></div>
+  </main>
+  </div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section flagged" id="sidebarFlagged"></div>
+    <div class="sidebar-section backlog" id="sidebarBacklog"></div>
+  </aside>
+  </div>
+
+  <footer class="footer">
+    <div class="legend">
+      <div class="legend-item"><span class="legend-icon" style="color:var(--accent)">&#10003;</span> Checked off — you know this cold</div>
+      <div class="legend-item"><span class="legend-icon" style="color:var(--flag)">&#9873;</span> Flagged for revision</div>
+    </div>
+    <div class="toolbar">
+      <span class="saved-info" id="savedInfo">No saves yet</span>
+      <button onclick="exportState()" title="Download progress as JSON — commit to git for durable backup">Export</button>
+      <button onclick="document.getElementById('importFile').click()" title="Restore progress from a JSON file">Import</button>
+      <button onclick="if(confirm('Clear all checks and flags? This cannot be undone unless you exported.')) clearState()">Clear all</button>
+      <input type="file" id="importFile" accept="application/json" style="display:none" onchange="importState(event)">
+    </div>
+  </footer>
+</div>
+
+<script>
+const topics = [
+  { id: "kubernetes", label: "Kubernetes", ref: "topics/kubernetes-internals.md", items: [
+    "Pod lifecycle: Pending → Running → Succeeded/Failed/Unknown",
+    "Difference between Deployment, StatefulSet, DaemonSet, ReplicaSet — when to use each",
+    "Namespaces — the multi-tenancy/organizational boundary for names, RBAC, quotas, and NetworkPolicy scope (distinct from Linux namespaces, which isolate kernel resources)",
+    "Services: ClusterIP vs NodePort vs LoadBalancer vs ExternalName — and the kube-proxy/iptables data plane behind them",
+    "How DNS works inside a cluster (CoreDNS, FQDN format: `svc.namespace.svc.cluster.local`) — and the OSI L3/L4/L7 mental model for walking a request through the stack",
+    "Liveness vs readiness vs startup probes — what happens when each fails",
+    "Resource requests vs limits — how the scheduler uses requests, how the kubelet uses limits",
+    "QoS classes: Guaranteed, Burstable, BestEffort — eviction order",
+    "ConfigMaps vs Secrets — how they're mounted (env vs volume)",
+    "RBAC: Role vs ClusterRole, RoleBinding vs ClusterRoleBinding — and the ServiceAccounts they actually bind to",
+    "NetworkPolicy: ingress vs egress, default deny patterns — and whether a block produces a timeout (drop) or a connection refused (reset)",
+    "Ingress — L7 routing on host/path, and why a plain (L4) Service can't do this",
+    "HPA vs VPA vs Cluster Autoscaler — HPA changes replica *count* from a metric, VPA changes a container's *requests/limits*, Cluster Autoscaler changes *node count* based on unschedulable Pending pods; know why HPA+VPA on the same metric fights itself",
+    "PodDisruptionBudgets — the guardrail against voluntary disruption (node drains, upgrades) evicting too many replicas of the same workload at once",
+    "Taints/tolerations and node/pod affinity — repelling vs attracting scheduling, and how each produces a different Pending reason",
+    "PVC/PV binding, StorageClass, access modes (RWO, RWX, ROX)",
+    "kubectl commands cold: `get`, `describe`, `logs`, `exec`, `apply`, `rollout status`, `get events`, `top`",
+  ]},
+  { id: "virtualization", label: "VMs vs Containers vs K8s", ref: "topics/kubernetes-internals.md", items: [
+    "Virtual machines: hypervisor types — Type 1/bare-metal (KVM, ESXi) vs Type 2/hosted (VirtualBox, VMware Workstation); each VM gets its own full OS and kernel",
+    "Containers vs VMs: containers share the host kernel (namespaces + cgroups), so they start in milliseconds but isolate less than a VM",
+    "Docker Compose — declarative multi-container setups on a single host; the one-host precursor to what Kubernetes coordinates across many",
+    "When to reach for which: a VM for full OS/kernel isolation or a different OS entirely; a container for fast, portable packaging on a shared kernel; Kubernetes when you need orchestration across many containers and hosts — not just \"because containers\"",
+  ]},
+  { id: "linux", label: "Linux, OS & Networking", ref: "topics/linux-and-networking.md", items: [
+    "Basic navigation and file discovery: `ls`/`ls -la`, `cd`, `find` — the fundamentals underneath the internals below",
+    "File descriptors: 0/1/2 (stdin/stdout/stderr), how `open()` creates an fd, fd table per process",
+    "Inodes: what they store (metadata, not filename), hard links vs soft links, `stat` output",
+    "Process lifecycle: fork/exec, zombie (parent hasn't `wait()`) vs orphan (parent died, init adopts)",
+    "Signals: SIGTERM (graceful), SIGKILL (immediate, uncatchable), SIGCHLD, SIGHUP",
+    "Process control and service management: `kill`/`kill -9` (sending the signals above from the shell), `systemctl` (start/stop/enable/status, reading a unit file)",
+    "Memory: RSS vs VSZ, virtual address space, page cache, OOM killer",
+    "`ps aux`, `top`, `lsof`, `netstat`/`ss`, `df`, `du`, `iostat`, `vmstat` — know what each column means",
+    "Disk and storage: `df` (filesystem-level space) vs `du` (directory/file-level space), `mount` (what's attached where), `lsblk` (block devices) — and how LVM sits underneath them",
+    "Linux file permissions: chmod, chown, sticky bit, setuid/setgid, ACLs (`getfacl`/`setfacl`) for permissions beyond the standard owner/group/other model",
+    "Package management: `apt`/`dpkg` (Debian/Ubuntu) vs `yum`/`dnf`/`rpm` (RHEL/CentOS/Fedora) — install/upgrade/remove, dependency resolution",
+    "`/proc` filesystem: `/proc/[pid]/fd`, `/proc/[pid]/maps`, `/proc/meminfo`, `/proc/cpuinfo`",
+    "Cgroups and namespaces — what they isolate (pid, net, mnt, uts, ipc, user)",
+    "grep, awk, sed, find, xargs, `tail -f` — piping, text processing, and following a live log",
+    "Shell scripting fundamentals: variables, conditionals, loops, functions in a bash script — and `cron`/`crontab` syntax for scheduling them",
+    "`ls -l` walked end-to-end at the syscall level (`opendir`/`readdir`/`stat`)",
+    "Virtual memory: per-process address space, paging, demand paging, page faults (minor vs major), page cache",
+    "Copy-on-write — what `fork()` actually shares vs copies, and when pages get duplicated",
+    "Context switch — what's saved/restored; run queue; CFS at a high level",
+    "**Load average ≠ CPU%** — counts runnable + uninterruptible-sleep tasks",
+    "Threads vs processes — shared vs isolated memory; race conditions; locks/mutexes",
+    "The GIL (Python, or any interpreted language with one) — what it serializes, implication for CPU-bound vs I/O-bound work",
+    "IPC: pipes, shared memory, semaphores — when you'd pick each",
+    "TCP 3-way handshake + 4-way teardown; why TIME_WAIT exists (2×MSL)",
+    "TCP states; CLOSE_WAIT buildup = app not closing sockets (fd leak); spot in `ss -tan`",
+    "TCP vs UDP — when each; flow control (window) vs congestion control (slow start)",
+    "\"What happens when you type a URL and hit Enter?\" — DNS → TCP → TLS → HTTP → render",
+    "TLS handshake — asymmetric to exchange a symmetric key; certs; SNI",
+    "DNS resolution path — stub → recursive → root → TLD → authoritative",
+    "L4 vs L7 load balancing (ties to kube-proxy / Ingress)",
+    "CIDR / subnets / private ranges / NAT — basics",
+    "connection refused (RST) vs timeout (drop) vs reset (mid-stream RST) — name the signal for each",
+    "Tools: `ss -tanp`, `dig`, `nslookup`, `curl -v`, `ping`, `tcpdump`, `traceroute`, `nc -zv` — what each reveals",
+  ]},
+  { id: "scripting", label: "Python Scripting", ref: "topics/scripting-patterns.md", items: [
+    "Parse a log file, extract patterns, count frequencies — `re`, file I/O, `collections.Counter`",
+    "Write a function that processes a list/dict and returns transformed output",
+    "String compression/manipulation",
+    "Check if a process is running, parse JSON/YAML output from kubectl",
+    "Rate limiter (token bucket), LRU/TTL cache, retry with exponential backoff + jitter, top-K from a stream",
+  ]},
+  { id: "docker", label: "Docker", items: [
+    "Image vs container vs layer",
+    "Dockerfile instructions: FROM, RUN, CMD vs ENTRYPOINT, COPY vs ADD, EXPOSE, ENV",
+    "Multi-stage builds — why they reduce image size",
+    "Docker networking: bridge, host, none, overlay",
+    "Volumes: bind mounts vs named volumes vs tmpfs — what persists past a container's life vs what doesn't",
+    "`docker ps`, `docker logs`, `docker exec -it`, `docker inspect`, `docker stats`",
+    "Container security: running as non-root, read-only filesystem, dropping capabilities, seccomp",
+    "Difference between CMD and ENTRYPOINT — classic trap",
+    "Shell form vs exec form — why shell form breaks signal delivery to your app (PID 1 is the shell, not your process)",
+  ]},
+  { id: "aws", label: "AWS", ref: "topics/aws-cloud.md", items: [
+    "IAM: roles vs users vs policies, least privilege, instance profiles, OIDC federation",
+    "VPC: subnets (public vs private), route tables, security groups vs NACLs, NAT gateway",
+    "EKS: how node groups work, how pods get IAM permissions (IRSA), VPC CNI IP density limits",
+    "ECS vs EKS — when you'd pick each",
+    "S3: bucket policies, versioning, lifecycle rules",
+    "CloudWatch: metrics, logs, alarms — basic concepts",
+    "EC2: instance types, auto-scaling groups, launch templates",
+    "SQS (pull, at-least-once, visibility timeout) vs SNS (push, fan-out); DLQs + idempotency",
+    "Lambda: event-driven, cold starts as a real latency/SLO consideration, not a footnote",
+  ]},
+  { id: "pulumi", label: "Infrastructure as Code (Pulumi)", items: [
+    "Stacks — isolated instances of a program (e.g. dev/staging/prod), each with its own state and config",
+    "Resources & providers — cloud APIs (AWS/Azure/GCP/Kubernetes) wrapped as typed resources in a general-purpose language instead of a declarative DSL",
+    "Inputs/Outputs — the async `Output<T>` type for values only known after a resource is created, and how it propagates through dependent resources",
+    "State backends — Pulumi Service (SaaS or self-hosted) vs self-managed backends (S3, GCS, Azure Blob) — SaaS-hosted by default",
+    "Component resources — composing multiple resources into a single reusable abstraction, the OOP-native equivalent of a module",
+    "`pulumi preview` / `up` / `destroy` / `refresh` — the core CLI lifecycle",
+    "Policy as code (CrossGuard) — enforce org policy against resources before they're created, in the same language as the infra code",
+    "Config and secrets — per-stack config values, encrypted secrets via a provider (passphrase or cloud KMS)",
+    "The core tradeoff vs a declarative DSL: a real programming language gives loops, conditionals, functions, tests, and an existing package ecosystem — more expressive, but easier to accidentally introduce non-idempotent or side-effect-laden code",
+  ]},
+  { id: "observability", label: "System Design & Observability", ref: "topics/system-design-observability.md", items: [
+    "Three pillars: metrics, logs, traces — what each answers, and why they have different cost/retention profiles",
+    "The cardinality trap in metric labels",
+    "Pull (Prometheus) vs push (logs/traces) — and why each pillar uses the model it does",
+    "Alert on symptoms (SLOs), not causes — alert hygiene levers (`for:`, grouping, severity routing)",
+    "SLI / SLO / SLA / error budget — defined precisely; four golden signals (Latency, Traffic, Errors, Saturation)",
+    "Burn-rate alerting — the mechanism for spending an error budget deliberately: page on fast burn, ticket on slow burn",
+    "Monitoring the monitoring — dead-man's-switch, not sharing fate with what it observes",
+  ]},
+  { id: "data-platform", label: "Data Platforms", ref: "topics/data-platform-streaming.md", items: [
+    "Kafka core concepts: topics, partitions (ordering is per-partition only, never cross-partition), offsets, brokers/leaders",
+    "Kafka producers: `acks` (0/1/all), retries, batching (`batch.size`/`linger.ms`), idempotence (producer ID + sequence number dedup)",
+    "Kafka consumers: consumer groups, partition assignment (partition count = hard ceiling on group parallelism), rebalancing and why it pauses the whole group",
+    "Consumer lag: what it measures, and why the *trend* matters more than the static number",
+    "Kafka retention: time-based, size-based, and compaction (`cleanup.policy=compact` — latest value per key, not a full history)",
+    "Kafka replication: ISR, `min.insync.replicas`, under-replicated partitions as a leading indicator of data-loss risk",
+    "Flink architecture: JobManager (coordinator, SPOF without HA), TaskManager (worker), slots, parallelism vs total slots",
+    "Flink job lifecycle: CREATED → RUNNING → FINISHED/CANCELLED/FAILED, and what a RESTARTING loop in the exception history signals",
+    "Streaming vs batch mode in Flink — same engine, different fault-tolerance and optimization assumptions",
+    "Flink sources and sinks: Kafka source, S3/HDFS sink, JDBC sink — why the *sink's* capabilities gate the achievable delivery guarantee",
+    "Flink: checkpointing vs savepoints, incremental vs full checkpoints, backpressure, state backends (heap vs RocksDB), keyed vs operator state",
+    "Event-time vs processing-time; watermarks; the idle-partition watermark-stall trap; allowed lateness + side outputs",
+    "Spark: driver/executor model, the shuffle, data skew (the one that gets asked), executor OOM, dynamic allocation",
+    "Exactly-once mechanics: Flink checkpoint barriers + 2-phase-commit sinks; Kafka idempotent producer + transactions",
+    "The lake vs the serving tier as two different sinks with two different reliability profiles; the small-files problem",
+    "Golden signals for a streaming pipeline: consumer lag, end-to-end latency, throughput, checkpoint duration, error rate, freshness/completeness",
+  ]},
+  { id: "k8s-labs", label: "Failure Labs: Kubernetes", ref: "failure-labs/kubernetes.md", items: [
+    "OOMKilled pods vs CrashLoopBackOff — tell them apart, then tell genuine CPU saturation apart from CPU *throttling* (same symptom, opposite fix)",
+    "Node pressure: fill disk via `hostPath`, watch the kubelet evict pods in QoS order (BestEffort → Burstable → Guaranteed)",
+    "CoreDNS deletion: service-to-service failures that look like app errors, not DNS errors",
+    "Service endpoint mismatch: a selector matching nothing, traffic silently failing",
+    "NetworkPolicy blocking: timeout vs connection refused — reproduced by hand",
+    "CNI failure: pods stuck in ContainerCreating",
+    "etcd latency via disk I/O spike: watch the API server slow down and eventually time out",
+    "API server overload: API priority and fairness, and why `kubectl` hangs even when workloads are fine",
+    "CrashLoopBackOff from four different root causes that all look identical from the outside",
+    "Liveness vs readiness vs startup probe misconfiguration: a too-aggressive liveness probe killing a healthy-but-slow-starting pod",
+    "Pending pods from three distinct causes: oversized resource requests, nodeSelector mismatch, taint without toleration",
+    "PVC stuck in Pending: nonexistent StorageClass vs `WaitForFirstConsumer` binding mode",
+    "Pod stuck in Terminating: `preStop` hook + `terminationGracePeriodSeconds`",
+  ]},
+  { id: "data-labs", label: "Failure Labs: Data Platforms", ref: "failure-labs/data-platform.md", items: [
+    "Flink: backpressure — trace it upstream from the busy operator in the Flink UI",
+    "Flink: JobManager as a single point of failure with no HA configured",
+    "Flink: checkpoint failure and timeout under backpressure or large state",
+    "Flink: stuck watermark and late data — the idle-partition trap, reproduced by hand",
+    "Flink: unbounded keyed state growth with no TTL",
+    "Flink: TaskManager OOM — heap-backend state outgrowing configured memory",
+    "Flink: job restart loops — a deterministic failure masquerading as transient",
+    "Kafka: consumer lag spike — slow consumer vs a rebalancing storm, and how to tell them apart",
+    "Kafka: under-replicated partitions from a dead or overloaded broker",
+    "Kafka: producer/consumer timeouts from broker overload or network degradation",
+    "Kafka: topic partition skew — a hot partition from an uneven key, and why aggregate metrics hide it",
+    "Spark: data skew — the one Spark topic that reliably gets asked about",
+    "Spark: executor OOM vs driver OOM",
+    "Spark: shuffle spill to disk",
+    "Spark: the small-files problem on the lake side",
+  ]},
+];
+
+const STORAGE_KEY = "sreRoadmapChecklist.state.v1";
+const CHECK_SVG = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>';
+const FLAG_SVG = '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M5 3a1 1 0 0 0-1 1v17h2v-7h10.586L17 12.5 16.586 11H6V4a1 1 0 0 0-1-1zM6 5h9.382l.553 1.106L17.118 9H6V5z"/></svg>';
+
+let state = loadState();
+let currentTopic = 0;
+let viewMode = "topic";
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { version: 1, items: {}, lastModified: null, lastExported: null };
+    const parsed = JSON.parse(raw);
+    return { version: 1, items: {}, lastModified: null, lastExported: null, ...parsed };
+  } catch (e) {
+    return { version: 1, items: {}, lastModified: null, lastExported: null };
+  }
+}
+
+function saveState() {
+  state.lastModified = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  updateSavedInfo();
+}
+
+function itemId(topicIdx, itemIdx) {
+  return `t${topicIdx}-i${itemIdx}`;
+}
+
+function getMark(id) {
+  return state.items[id] || { checked: false, flag: false };
+}
+
+function toggleMark(id, key) {
+  const cur = { ...getMark(id) };
+  cur[key] = !cur[key];
+  if (!cur.checked && !cur.flag) {
+    delete state.items[id];
+  } else {
+    state.items[id] = cur;
+  }
+  saveState();
+  renderAll();
+}
+
+function clearState() {
+  state = { version: 1, items: {}, lastModified: null, lastExported: state.lastExported };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  updateSavedInfo();
+  renderAll();
+}
+
+function exportState() {
+  state.lastExported = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const stamp = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `sre-roadmap-progress-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  updateSavedInfo();
+}
+
+function importState(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (typeof parsed !== "object" || !parsed.items) throw new Error("Bad format");
+      if (!confirm(`Import ${Object.keys(parsed.items).length} items? This will overwrite current state.`)) return;
+      state = { version: 1, items: {}, lastModified: null, lastExported: null, ...parsed };
+      saveState();
+      renderAll();
+    } catch (err) {
+      alert("Could not import: " + err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = "";
+}
+
+function fmtAge(iso) {
+  if (!iso) return null;
+  const ms = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(ms / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+
+function updateSavedInfo() {
+  const el = document.getElementById("savedInfo");
+  const parts = [];
+  parts.push(state.lastModified ? `Saved ${fmtAge(state.lastModified)}` : "No saves yet");
+  parts.push(state.lastExported ? `exported ${fmtAge(state.lastExported)}` : "never exported");
+  el.textContent = parts.join(" · ");
+  const exportedMs = state.lastExported ? Date.now() - new Date(state.lastExported).getTime() : Infinity;
+  const stale = (!state.lastExported || exportedMs > 7 * 24 * 3600 * 1000) && Object.keys(state.items).length > 0;
+  el.classList.toggle("stale", stale);
+}
+
+function totalItemCount() {
+  return topics.reduce((a, t) => a + t.items.length, 0);
+}
+function checkedCount() {
+  return Object.values(state.items).filter(m => m.checked).length;
+}
+function flaggedCount() {
+  return Object.values(state.items).filter(m => m.flag).length;
+}
+function backlogCount() {
+  return totalItemCount() - checkedCount();
+}
+function topicCompletion(topicIdx) {
+  const topic = topics[topicIdx];
+  let done = 0;
+  topic.items.forEach((_, i) => { if (getMark(itemId(topicIdx, i)).checked) done++; });
+  return done / topic.items.length;
+}
+
+function renderTopicTabs() {
+  const tabs = document.getElementById("topicTabs");
+  const topicButtons = topics.map((t, i) =>
+    `<button class="tab ${viewMode === "topic" && i === currentTopic ? "active" : ""}" onclick="selectTopic(${i})">${t.label}</button>`
+  ).join("");
+  const fcount = flaggedCount();
+  const bcount = backlogCount();
+  const flaggedBtn = `<button class="tab flagged ${viewMode === "flagged" ? "active" : ""}" style="margin-left:auto" onclick="selectFlagged()">Flagged${fcount ? `<span class="count">${fcount}</span>` : ""}</button>`;
+  const backlogBtn = `<button class="tab backlog ${viewMode === "backlog" ? "active" : ""}" onclick="selectBacklog()">Still to do${bcount ? `<span class="count">${bcount}</span>` : ""}</button>`;
+  tabs.innerHTML = topicButtons + flaggedBtn + backlogBtn;
+}
+
+function renderProgBar() {
+  const bar = document.getElementById("progBar");
+  bar.innerHTML = topics.map((t, i) => {
+    const frac = topicCompletion(i);
+    const cls = frac >= 1 ? "done" : frac > 0 ? "active" : "future";
+    return `<div class="prog-seg ${cls}" title="${escapeHtml(t.label)}: ${Math.round(frac * 100)}%"></div>`;
+  }).join("");
+  const total = totalItemCount();
+  const done = checkedCount();
+  document.getElementById("totalBar").textContent = `${done}/${total} items checked · ${total ? Math.round((done / total) * 100) : 0}% of the roadmap`;
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function renderLabel(s) {
+  let out = escapeHtml(s);
+  out = out.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  out = out.replace(/`(.+?)`/g, "<code>$1</code>");
+  return out;
+}
+
+function renderTopic() {
+  const topic = topics[currentTopic];
+  document.getElementById("topicTitle").textContent = topic.label;
+  document.getElementById("topicSub").innerHTML = topic.ref
+    ? `Check each item off once you can explain it cold and connect it to a production scenario. Deeper reference: <a href="${topic.ref}" target="_blank">${topic.ref}</a>`
+    : "Check each item off once you can explain it cold and connect it to a production scenario.";
+
+  const list = document.getElementById("itemList");
+  list.innerHTML = topic.items.map((text, idx) => {
+    const id = itemId(currentTopic, idx);
+    const m = getMark(id);
+    const rowClasses = ["item-row"];
+    if (m.checked) rowClasses.push("is-checked");
+    if (m.flag) rowClasses.push("is-flagged");
+    return `<div class="${rowClasses.join(" ")}" data-id="${id}">
+      <span class="item-marks">
+        <button class="mark-btn check-btn ${m.checked ? "active" : ""}" title="Mark checked" onclick="toggleMark('${id}','checked')">${CHECK_SVG}</button>
+        <button class="mark-btn flag-btn ${m.flag ? "active" : ""}" title="Flag for revision" onclick="toggleMark('${id}','flag')">${FLAG_SVG}</button>
+      </span>
+      <span class="item-label">${renderLabel(text)}</span>
+    </div>`;
+  }).join("");
+}
+
+function findItem(id) {
+  const m = id.match(/^t(\d+)-i(\d+)$/);
+  if (!m) return null;
+  const topicIdx = parseInt(m[1]);
+  const itemIdx = parseInt(m[2]);
+  const topic = topics[topicIdx];
+  if (!topic) return null;
+  const text = topic.items[itemIdx];
+  if (text === undefined) return null;
+  return { topicIdx, itemIdx, text, topic };
+}
+
+function renderList(listId, predicate, emptyMsg, clearKeyName, clearLabel) {
+  const list = document.getElementById(listId);
+  const grouped = {};
+  for (const id of Object.keys(state.items)) {
+    if (!predicate(state.items[id])) continue;
+    const info = findItem(id);
+    if (!info) continue;
+    const key = `${info.topicIdx}`;
+    if (!grouped[key]) grouped[key] = { topic: info.topic, topicIdx: info.topicIdx, items: [] };
+    grouped[key].items.push({ id, ...info, mark: state.items[id] });
+  }
+  const groups = Object.values(grouped).sort((a, b) => a.topicIdx - b.topicIdx);
+  if (groups.length === 0) {
+    list.innerHTML = `<div class="backlog-empty">${emptyMsg}</div>`;
+    return;
+  }
+  list.innerHTML = groups.map(g => `
+    <div class="backlog-group">
+      <div class="backlog-group-title">${escapeHtml(g.topic.label)} <span style="color:var(--text-tertiary); font-weight:400; font-size:11px;">· ${g.items.length} item${g.items.length === 1 ? "" : "s"}</span></div>
+      ${g.items.sort((a, b) => a.itemIdx - b.itemIdx).map(it => `
+        <div class="backlog-item">
+          <span class="b-icons">
+            ${it.mark.checked ? `<span style="color:var(--accent)" title="Checked">${CHECK_SVG}</span>` : ""}
+            ${it.mark.flag ? `<span style="color:var(--flag)" title="Flagged for revision">${FLAG_SVG}</span>` : ""}
+          </span>
+          <span class="b-label">${renderLabel(it.text)}</span>
+          <span class="b-actions">
+            <button onclick="jumpTo(${it.topicIdx})">Open topic</button>
+            <button onclick="toggleMark('${it.id}','${clearKeyName}')">${clearLabel}</button>
+          </span>
+        </div>`).join("")}
+    </div>`).join("");
+}
+
+function renderBacklog() {
+  renderList(
+    "backlogList",
+    m => !m.checked,
+    "Nothing left — every item across every topic is checked off.",
+    "checked",
+    "Mark done"
+  );
+}
+
+function renderFlagged() {
+  renderList(
+    "flaggedList",
+    m => m.flag,
+    "No flagged topics yet. Flag (&#9873;) an item when it's shaky and you want to revisit it.",
+    "flag",
+    "Revised"
+  );
+}
+
+function jumpTo(topicIdx) {
+  currentTopic = topicIdx;
+  viewMode = "topic";
+  renderAll();
+}
+
+function selectTopic(i) {
+  currentTopic = i;
+  viewMode = "topic";
+  renderAll();
+}
+
+function selectBacklog() {
+  viewMode = "backlog";
+  renderAll();
+}
+
+function selectFlagged() {
+  viewMode = "flagged";
+  renderAll();
+}
+
+function renderSidebar() {
+  const flaggedItems = [];
+  const backlogItems = [];
+  for (const id of Object.keys(state.items)) {
+    const info = findItem(id);
+    if (!info) continue;
+    if (info.topicIdx === currentTopic && viewMode === "topic") continue;
+    const mark = state.items[id];
+    if (mark.flag) flaggedItems.push({ id, ...info });
+  }
+  // "Still to do elsewhere" would be nearly everything unchecked — too noisy for a sidebar,
+  // so the sidebar surfaces flags only; use the "Still to do" tab for the full backlog.
+  const sortFn = (a, b) => a.topicIdx - b.topicIdx || a.itemIdx - b.itemIdx;
+  flaggedItems.sort(sortFn);
+
+  const renderItems = (items, emptyMsg, clearKeyName, clearLabel) => {
+    if (items.length === 0) return `<div class="sidebar-empty">${emptyMsg}</div>`;
+    return items.map(it => `
+      <div class="sidebar-item" onclick="jumpTo(${it.topicIdx})" title="Open ${it.topic.label}">
+        <div class="sidebar-item-row">
+          <span class="sidebar-item-meta">${escapeHtml(it.topic.label)}</span>
+          <button class="sidebar-clear" onclick="event.stopPropagation(); toggleMark('${it.id}','${clearKeyName}')">${clearLabel}</button>
+        </div>
+        <div class="sidebar-item-label">${renderLabel(it.text)}</div>
+      </div>`).join("");
+  };
+
+  document.getElementById("sidebarFlagged").innerHTML = `
+    <div class="sidebar-title"><span class="icon">${FLAG_SVG}</span><span>Flagged elsewhere</span><span class="badge">${flaggedItems.length}</span></div>
+    ${renderItems(flaggedItems, "Nothing flagged in other topics.", "flag", "Revised")}
+  `;
+  document.getElementById("sidebarBacklog").innerHTML = `
+    <div class="sidebar-title"><span class="icon">&#9776;</span><span>Overall progress</span><span class="badge">${checkedCount()}/${totalItemCount()}</span></div>
+    <div class="sidebar-empty">${backlogCount()} item${backlogCount() === 1 ? "" : "s"} left across all topics. Open the "Still to do" tab for the full list.</div>
+  `;
+}
+
+function renderAll() {
+  renderTopicTabs();
+  updateSavedInfo();
+  const topicView = document.getElementById("topicView");
+  const flaggedView = document.getElementById("flaggedView");
+  const backlogView = document.getElementById("backlogView");
+  const sidebar = document.getElementById("sidebar");
+  const layout = document.getElementById("layoutGrid");
+  topicView.style.display = viewMode === "topic" ? "" : "none";
+  flaggedView.style.display = viewMode === "flagged" ? "" : "none";
+  backlogView.style.display = viewMode === "backlog" ? "" : "none";
+  const showSidebar = viewMode === "topic";
+  sidebar.style.display = showSidebar ? "" : "none";
+  layout.classList.toggle("no-sidebar", !showSidebar);
+  renderSidebar();
+  if (viewMode === "topic") {
+    renderProgBar();
+    renderTopic();
+  } else if (viewMode === "flagged") {
+    renderFlagged();
+  } else if (viewMode === "backlog") {
+    renderBacklog();
+  }
+}
+
+renderAll();
+setInterval(updateSavedInfo, 60000);
+</script>
+</body>
+</html>

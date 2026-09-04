@@ -1,0 +1,39 @@
+# CPU Throttling lab — a "mysteriously slow" service.
+# report-worker does a fixed chunk of CPU work per cycle and logs how long
+# each cycle took (wall-clock). With a tight CPU limit, CFS throttles it and
+# wall-clock latency balloons even though the app is healthy and not crashing.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: report-worker
+  labels: { app: report-worker }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app: report-worker }
+  template:
+    metadata:
+      labels: { app: report-worker }
+    spec:
+      containers:
+        - name: worker
+          image: python:3.11-slim
+          command: ["python", "-u", "-c"]
+          args:
+            - |
+              import time
+              while True:
+                  s = time.time()
+                  x = 0
+                  for i in range(8_000_000):   # ~fixed CPU-bound chunk of "work"
+                      x += i
+                  dur = time.time() - s
+                  print(f"report generated in {dur:.2f}s", flush=True)
+                  time.sleep(0.2)
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"      # 10ms of CPU per 100ms period — the trap
+              memory: "64Mi"
