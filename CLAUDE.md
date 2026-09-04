@@ -54,6 +54,9 @@ off fastest:
 > https://www.brendangregg.com/Perf/linux_perf_tools_full.png
 > https://netflixtechblog.com/linux-performance-analysis-in-60-000-milliseconds-accc10403c55
 
+The full categorized list — every book, article, tool, and video used across this curriculum —
+lives in **Resources** near the end of this doc.
+
 ---
 
 ## Always-On (Parallel Track — All 12 Months)
@@ -95,12 +98,9 @@ entire afternoon of learning if you follow it all the way down.
 - Interrupts: interrupt context vs thread context, top half and bottom half, interrupt masking
 - Common tools: iostat, vmstat, top, pidstat, iotop, lsof, df, du — when and why, not just what
 
-**Resources:**
-- Brendan Gregg — USE method (brendangregg.com/usemethod.html)
-- Brendan Gregg — Linux perf tools full map (brendangregg.com/Perf/linux_perf_tools_full.png)
-- Netflix — Linux Performance Analysis in 60,000 Milliseconds (netflixtechblog.com)
-- syedali.net/engineer-interview-questions — good for self-testing
-- `roadmap/topics/linux-and-networking.md` — deep-dive reference for everything in this section
+**Resources:** Brendan Gregg's USE method and perf tools map, the Netflix 60-second Linux post, and
+syedali.net for self-testing — full links in **Resources → Linux & Performance**. Pair with
+`roadmap/topics/linux-and-networking.md` for the deep-dive reference on everything in this section.
 
 **Troubleshooting mental model to drill:**
 > Before touching the keyboard: (1) Is this live or historical? (2) Am I looking for symptoms or root cause? (3) Is the problem CPU, memory, I/O, network, or application-level? (4) What is the lowest-cost, highest-signal command to start with?
@@ -133,8 +133,6 @@ and legible to teammates during a real incident, not just correct.
 - Network segmentation
 - GDPR-compliant PII handling
 - Infrastructure as Code — Pulumi (`roadmap/CHECKLIST.md` § Infrastructure as Code): stacks, component resources, policy as code, and the imperative-language-vs-declarative-DSL tradeoff
-
-**Certifications:** CKA → CKS track
 
 ### K8s Failure Curriculum
 Work through all 5 categories from `roadmap/failure-labs/kubernetes.md`. One category per week = 5 weeks of high-quality learning.
@@ -202,11 +200,9 @@ Work through all 5 categories from `roadmap/failure-labs/kubernetes.md`. One cat
 - Prometheus + Grafana: observe every K8s failure through metrics
 - Full worked example: `roadmap/topics/system-design-observability.md`
 
-**SRE Book chapters for this phase:**
-- *Embracing Risk*
-- *Service Level Objectives*
-- *Handling Overload*
-- *Addressing Cascading Failures*
+**SRE Book chapters for this phase:** *Embracing Risk*, *Service Level Objectives*, *Handling
+Overload*, *Addressing Cascading Failures* — full phase-by-phase reading map in
+**Resources → SRE Practices & Reliability** (chapter guide).
 
 ### NALSD Framework
 A rigorous, non-abstract design framework for reasoning about an existing (or proposed) system's
@@ -225,11 +221,9 @@ starts from *what's already broken or fragile*, not a blank page.
 7. Failure modes and reliability (SLOs, monitoring, fallback)
 8. Cost/economic tradeoffs of the design
 
-**Resources:**
-- sre.google/workbook/non-abstract-design — primary resource for this
-- highscalability.com back-of-envelope calculations
-- aosabook.org/en/distsys.html
-- system-design-primer (github.com/donnemartin/system-design-primer)
+**Resources:** the NALSD workbook chapter is the primary resource here (see **Resource Priority
+Stack** above); highscalability.com, aosabook.org, and the system-design-primer round it out —
+full links in **Resources → System Design & NALSD**.
 
 **Back-of-envelope math traps to know:** Bandwidth vs IOPS vs latency feasibility checks. Know your constants (disk seek time, RAM speed, network RTT).
 
@@ -264,10 +258,10 @@ with someone who can push back is most of the value.
 - Leader election
 - See `roadmap/system-design/lld-problems/` and `roadmap/topics/scripting-patterns.md` for worked examples
 
-**Resources:**
-- System Design Interview — Alex Xu (vol 1 + 2) — the title says "interview," the content is a genuinely good HLD reference regardless
-- Refactoring Guru — refactoring.guru (for LLD patterns)
-- Write up your own team's production infrastructure as if you had to explain and defend every decision out loud to a new teammate
+**Resources:** *System Design Interview* (Alex Xu, both volumes) for HLD, Refactoring Guru for LLD
+patterns — full links in **Resources → System Design & NALSD**. Also:
+write up your own team's production infrastructure as if you had to explain and defend every
+decision out loud to a new teammate.
 
 ---
 
@@ -300,53 +294,68 @@ what they did, not just whether they got the right answer. A structure worth int
 5. Blamelessness should come through naturally in how you write and talk about failures — that's
    a habit, not a policy you have to remember to apply
 
-**SRE Book chapters for this phase:**
-- *Being On-Call*
-- *Postmortem Culture: Learning from Failure*
+**SRE Book chapters for this phase:** *Being On-Call*, *Postmortem Culture: Learning from Failure*
+— full phase-by-phase reading map in **Resources → SRE Practices & Reliability** (chapter guide).
 
 By now you should have:
-- CKA + CKS certifications (or well underway)
 - Several written RCAs from the failure labs, in the same shape you'd use for a real postmortem
 - Go proficiency (readable, production-safe code)
 - Comfort running a full HLD/LLD design conversation out loud with a mentor
 
 ---
 
-## Key Resources — Full List
+## Resources
 
-### Core Books
-| Resource | When | How |
-|----------|------|-----|
-| Google SRE Book (sre.google/sre-book) | All phases | Selective chapters only — not cover to cover |
-| Google SRE Workbook — NALSD chapter (sre.google/workbook) | Phase 3 | Primary resource for the design framework |
-| DDIA — Kleppmann | Phase 1 | Selective: replication, partitioning, consensus |
-| Kubernetes in Action — Lukša | Phase 1–2 | Selective chapters |
-| Systems Performance — Gregg | Phase 1 | Reference only |
-| System Design Interview — Alex Xu | Phase 3 | Both volumes — good HLD reference regardless of the title |
+Every external resource used across this curriculum, colocated and categorized here. Phase
+sections above point back into this list rather than repeating full links.
 
-### Online Resources
-| Resource | Phase | Purpose |
-|----------|-------|---------|
-| syedali.net/engineer-interview-questions | All | Linux + systems question bank, useful for self-testing |
-| sre.google/sre-book/effective-troubleshooting | Phase 2–3 | Troubleshooting methodology |
-| sre.google/workbook/non-abstract-design | Phase 3 | NALSD framework |
-| github.com/donnemartin/system-design-primer | Phase 3 | HLD reference |
-| brendangregg.com/usemethod.html | Phase 1 | USE method |
-| brendangregg.com/Perf/linux_perf_tools_full.png | Phase 1 | Linux perf tools map |
-| netflixtechblog.com — Linux 60,000ms | Phase 1 | Linux performance analysis |
-| highscalability.com — back-of-envelope | Phase 3 | Estimation framework |
-| aosabook.org/en/distsys.html | Phase 3 | Distributed systems |
-| gist.github.com/hellerbarde/2843375 | Phase 3 | Latency numbers every engineer should know |
-| refactoring.guru | Phase 3 | LLD patterns |
+### Linux & Performance
+| Resource | Type | Phase | Notes |
+|----------|------|-------|-------|
+| Systems Performance — Gregg | Book | Phase 1 | Reference only |
+| USE method (brendangregg.com/usemethod.html) | Article | Phase 1 | Structuring a live troubleshooting investigation |
+| Linux perf tools full map (brendangregg.com/Perf/linux_perf_tools_full.png) | Reference | Phase 1 | Map of tool → subsystem |
+| Linux Performance Analysis in 60,000 Milliseconds (netflixtechblog.com) | Article | Phase 1 | 60-second Linux troubleshooting checklist |
+| syedali.net/engineer-interview-questions | Question bank | All | Self-testing on Linux/systems fundamentals |
 
-### Tools
-- k9s — terminal UI for watching K8s failures in real time
-- stern — tail logs from multiple pods simultaneously
-- Prometheus + Grafana — observe every failure through metrics
-- Litmus Chaos — structured chaos experiments
+### Distributed Systems & Kubernetes
+| Resource | Type | Phase | Notes |
+|----------|------|-------|-------|
+| DDIA — Kleppmann | Book | Phase 1 | Selective: replication, partitioning, consensus |
+| Kubernetes in Action — Lukša | Book | Phase 1–2 | Selective chapters |
+| aosabook.org/en/distsys.html | Article | Phase 3 | Distributed systems architecture |
+| [Google Tech Talks](https://www.youtube.com/playlist?list=PLSIUOFhnxEiC3YTdxwqZqgEY5imVL8U8J) | Video | All | Broad CS/infra talks — dip in whenever a topic overlaps |
+| k9s | Tool | Phase 2 | Terminal UI for watching K8s failures in real time |
+| stern | Tool | Phase 2 | Tail logs from multiple pods simultaneously |
 
-### Some Resources
-- [Google Tech Talks](https://www.youtube.com/playlist?list=PLSIUOFhnxEiC3YTdxwqZqgEY5imVL8U8J)
+### System Design & NALSD
+| Resource | Type | Phase | Notes |
+|----------|------|-------|-------|
+| Google SRE Workbook — NALSD chapter (sre.google/workbook) | Book chapter | Phase 3 | Primary resource for the design framework |
+| System Design Interview — Alex Xu (vol 1 + 2) | Book | Phase 3 | Good HLD reference despite the title |
+| system-design-primer (github.com/donnemartin/system-design-primer) | Repo | Phase 3 | HLD reference |
+| highscalability.com | Article | Phase 3 | Back-of-envelope estimation |
+| Latency numbers every engineer should know (gist.github.com/hellerbarde/2843375) | Reference | Phase 3 | Constants for back-of-envelope math |
+| refactoring.guru | Reference | Phase 3 | LLD patterns |
+
+### SRE Practices & Reliability
+| Resource | Type | Phase | Notes |
+|----------|------|-------|-------|
+| Google SRE Book (sre.google/sre-book) | Book | All phases | Selective chapters only — see chapter guide below |
+| sre.google/sre-book/effective-troubleshooting | Article | Phase 2–3 | Troubleshooting methodology |
+| Prometheus + Grafana | Tool | Phase 3 | Observe every failure through metrics |
+| Litmus Chaos | Tool | Phase 3 | Structured chaos experiments |
+
+**SRE Book chapter guide:**
+| Chapter | Phase |
+|---------|-------|
+| Effective Troubleshooting | Phase 1 (Resource Priority Stack) |
+| Embracing Risk | Phase 3 |
+| Service Level Objectives | Phase 3 |
+| Handling Overload | Phase 3 |
+| Addressing Cascading Failures | Phase 3 |
+| Being On-Call | Phase 4 |
+| Postmortem Culture: Learning from Failure | Phase 4 |
 
 ---
 
