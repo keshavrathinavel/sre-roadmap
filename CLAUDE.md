@@ -119,6 +119,9 @@ and legible to teammates during a real incident, not just correct.
 - Kubernetes internals: scheduler, kubelet, etcd, API server, controller manager (`roadmap/topics/kubernetes-internals.md`)
 - Kind cluster labs — break and fix structured failure scenarios (see Failure Curriculum below)
 
+**Resources:** DDIA, *Kubernetes in Action*, and aosabook.org — full links in
+**Resources → Distributed Systems & Kubernetes**.
+
 ### Coding & Scripting — Start Now
 - Focus on patterns: heap, BFS/DFS, graphs, sliding window, two pointers
 - Practice without IDE autocomplete occasionally — you won't always have it when debugging on a
@@ -142,7 +145,9 @@ and legible to teammates during a real incident, not just correct.
 
 ### K8s Failure Curriculum
 Work through all 5 categories from `roadmap/failure-labs/kubernetes.md`, one at a time, at
-whatever pace lets each one actually sink in.
+whatever pace lets each one actually sink in. Keep `k9s` open to watch pod/node state change live,
+and `stern` to tail logs across pods as you trigger and diagnose each scenario
+(**Resources → Distributed Systems & Kubernetes**).
 
 **Category 1 — Resource Exhaustion**
 - OOMKilled pods: distinguish from CrashLoopBackOff
@@ -229,8 +234,9 @@ starts from *what's already broken or fragile*, not a blank page.
 8. Cost/economic tradeoffs of the design
 
 **Resources:** the NALSD workbook chapter is the primary resource here (see **Resource Priority
-Stack** above); highscalability.com, aosabook.org, and the system-design-primer round it out —
-full links in **Resources → System Design & NALSD**.
+Stack** above); highscalability.com and the system-design-primer round it out
+(**Resources → System Design & NALSD**), and aosabook.org lives under
+**Resources → Distributed Systems & Kubernetes**.
 
 **Back-of-envelope math traps to know:** Bandwidth vs IOPS vs latency feasibility checks. Know your constants (disk seek time, RAM speed, network RTT).
 
@@ -368,8 +374,9 @@ sections above point back into this list rather than repeating full links.
 
 ## Repo structure
 
+- `roadmap/failure-labs/` — hands-on break-it-yourself curricula (Kubernetes, data platforms) with
+  manifests and assets — start here
 - `CHECKLIST.md` / `checklist.html` — the flat, checkable version of every topic below, organized by domain rather than by phase or date
 - `roadmap/topics/` — deep-dive reference docs (Kubernetes internals, Linux & networking, AWS/EKS, system-design/observability, data-platform streaming, scripting patterns)
-- `roadmap/failure-labs/` — hands-on break-it-yourself curricula (Kubernetes, data platforms) with manifests and assets
 - `roadmap/system-design/` — the HLD/LLD framework plus worked LLD and distributed-systems problems
 - `roadmap/scripting-practice/` — worked Python exercises (log parsing, rate limiter, LRU/TTL cache, top-K stream)
